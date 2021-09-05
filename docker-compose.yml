@@ -1,0 +1,18 @@
+version: '3'
+services:
+  async_server:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/server/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+  async_buses:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/buses/Dockerfile
+    volumes:
+      - .:/usr/src/app

@@ -1,9 +1,8 @@
 import configargparse
 import functools
-import trio_websocket
-from pathlib import Path
 import trio
 import trio_websocket
+from pathlib import Path
 
 
 def get_parser(description: str, config_file: str):

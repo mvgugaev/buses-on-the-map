@@ -2,10 +2,9 @@ import trio
 import logging
 import os
 import random
-from sys import stderr
+import json
 from functools import partial
 from trio_websocket import open_websocket_url
-import json
 from itertools import cycle
 from utils import (
     get_parser,
@@ -21,45 +20,45 @@ def parse_arguments():
     """Функция обработки аргументов командной строки."""
     parser = get_parser(
         'Async app for testing bus rout server application.',
-        'config.conf',
+        'fake_bus_config.conf',
     )
     parser.add_arg(
-        '-s', 
-        '--server', 
+        '-s',
+        '--server',
         help='Server address',
     )
     parser.add_arg(
         '-r',
-        '--routes', 
+        '--routes',
         help='Number of routes',
         type=int,
     )
     parser.add_arg(
-        '-bpr', 
-        '--buses_per_route', 
+        '-bpr',
+        '--buses_per_route',
         help='Buses per route',
         type=int,
     )
     parser.add_arg(
-        '-wn', 
-        '--websockets_number', 
+        '-wn',
+        '--websockets_number',
         help='Maximum count of open socket',
         type=int,
     )
     parser.add_arg(
-        '-eid', 
-        '--emulator_id', 
+        '-eid',
+        '--emulator_id',
         help='BusID prefix for multiply instance',
     )
     parser.add_arg(
-        '-rt', 
-        '--refresh_timeout', 
+        '-rt',
+        '--refresh_timeout',
         help='Refresh buses points timeout',
         type=float,
     )
     parser.add_arg(
-        '-v', 
-        '--v', 
+        '-v',
+        '--v',
         help='Logging',
         action='store_true',
     )
@@ -127,7 +126,7 @@ async def run_app():
 
     async with trio.open_nursery() as nursery:
         channels = []
-        
+
         for index in range(args.websockets_number):
             channels.append(
                 trio.open_memory_channel(index),
@@ -156,10 +155,10 @@ async def run_app():
                         route['coordinates'],
                     ),
                 )
-        
+
         for channel in channels:
             nursery.start_soon(
-                send_updates, 
+                send_updates,
                 channel[1],
                 args.server,
                 logger,
