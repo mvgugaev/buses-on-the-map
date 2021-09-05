@@ -1,7 +1,12 @@
 import trio
 import json
+import logging
 from functools import partial
 from trio_websocket import serve_websocket, ConnectionClosed
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('test')
 
 
 SERVER_ADDR = '127.0.0.1'
@@ -48,7 +53,7 @@ async def read_buses(request, buses={}):
             break
 
 
-async def main():
+async def run_app():
     async with trio.open_nursery() as nursery:
         nursery.start_soon(
             partial(
@@ -75,4 +80,13 @@ async def main():
             8000,
         )
 
-trio.run(main)
+
+def main():
+    try:
+        trio.run(run_app)
+    except KeyboardInterrupt:
+        logger.info('Application closed.')
+
+
+if __name__ == '__main__':
+    main()
