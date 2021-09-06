@@ -4,9 +4,7 @@ import logging
 from functools import partial
 from dataclasses import dataclass, asdict
 from trio_websocket import serve_websocket, ConnectionClosed
-from utils import (
-    get_parser,
-)
+from utils import get_parser
 
 
 BUSES = {}
@@ -96,9 +94,9 @@ def is_inside(bounds, lat, lng):
     return False
 
 
-def validate_bus_json(jsonData):
+def validate_bus_json(json_data):
     try:
-        data = json.loads(jsonData)
+        data = json.loads(json_data)
 
         if not isinstance(data, dict):
             return False, 'Incorrect type'
@@ -114,9 +112,9 @@ def validate_bus_json(jsonData):
     return True, None
 
 
-def validate_bounds_json(jsonData):
+def validate_bounds_json(json_data):
     try:
-        data = json.loads(jsonData)
+        data = json.loads(json_data)
 
         if not isinstance(data, dict):
             return False, 'Incorrect type'

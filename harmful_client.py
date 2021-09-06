@@ -2,9 +2,7 @@ import trio
 import json
 import logging
 from trio_websocket import open_websocket_url
-from utils import (
-    get_parser,
-)
+from utils import get_parser
 
 
 logging.basicConfig(level=logging.INFO)
