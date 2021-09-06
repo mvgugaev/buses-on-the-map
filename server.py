@@ -34,10 +34,8 @@ class WindowBounds:
             Проверка вхождения bus по координатам
             lat, lng в WindowBounds.
         """
-        if self.south_lat < bus.lat < self.north_lat and \
-           self.west_lng < bus.lng < self.east_lng:
-            return True
-        return False
+        return self.south_lat < bus.lat < self.north_lat and \
+            self.west_lng < bus.lng < self.east_lng
 
     def update(self, south_lat, north_lat, west_lng, east_lng):
         self.south_lat = south_lat
@@ -81,17 +79,6 @@ def parse_arguments():
         action='store_true',
     )
     return parser.parse_args()
-
-
-def is_inside(bounds, lat, lng):
-    """
-        Проверка вхождения координат lat, lng
-        в прямоугольник bounds.
-    """
-    if bounds['south_lat'] < lat < bounds['north_lat'] and \
-       bounds['west_lng'] < lng < bounds['east_lng']:
-        return True
-    return False
 
 
 def validate_bus_json(json_data):
@@ -142,7 +129,7 @@ async def listen_browser(ws, viewport):
     while True:
         try:
             message = await ws.get_message()
-            status, message = validate_bounds_json(message)
+            status, validate_message = validate_bounds_json(message)
 
             if status:
                 bounds = json.loads(message)['data']
@@ -151,7 +138,7 @@ async def listen_browser(ws, viewport):
                 await ws.send_message(
                     json.dumps(
                         {
-                            'errors': [message],
+                            'errors': [validate_message],
                             'msgType': 'Errors',
                         },
                     ),

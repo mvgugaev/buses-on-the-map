@@ -77,7 +77,9 @@ def shift(key, array):
 def load_routes(max_count, directory_path='routes'):
     """Генератор путей."""
     count = 0
-    for filename in random.shuffle(os.listdir(directory_path)):
+    directory_files = os.listdir(directory_path)
+    random.shuffle(directory_files)
+    for filename in directory_files:
         if filename.endswith(".json"):
             filepath = os.path.join(directory_path, filename)
             with open(filepath, 'r', encoding='utf8') as file:
