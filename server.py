@@ -142,16 +142,16 @@ async def listen_browser(ws, viewport):
     while True:
         try:
             message = await ws.get_message()
-            validate_status = validate_bounds_json(message)
+            status, message = validate_bounds_json(message)
 
-            if validate_status[0]:
+            if status:
                 bounds = json.loads(message)['data']
                 viewport.update(**bounds)
             else:
                 await ws.send_message(
                     json.dumps(
                         {
-                            'errors': [validate_status[1]],
+                            'errors': [message],
                             'msgType': 'Errors',
                         },
                     ),

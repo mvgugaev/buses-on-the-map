@@ -133,17 +133,17 @@ async def run_app():
             )
 
         for route in load_routes(args.routes):
-            channel = random.choice(channels)
+            send_channel, _ = random.choice(channels)
 
             for bus_index in range(args.buses_per_route):
-                route_shift = random.randint(5, len(route['coordinates']) - 5)
+                route_shift = random.randint(1, len(route['coordinates']) - 1)
 
                 nursery.start_soon(
                     partial(
                         run_bus,
                         timeout=args.refresh_timeout,
                     ),
-                    channel[0],
+                    send_channel,
                     route['name'],
                     generate_bus_id(
                         args.emulator_id,
@@ -156,10 +156,10 @@ async def run_app():
                     ),
                 )
 
-        for channel in channels:
+        for _, recive_channel in channels:
             nursery.start_soon(
                 send_updates,
-                channel[1],
+                recive_channel,
                 args.server,
                 logger,
             )
