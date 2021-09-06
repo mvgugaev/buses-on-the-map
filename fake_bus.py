@@ -77,7 +77,7 @@ def shift(key, array):
 def load_routes(max_count, directory_path='routes'):
     """Генератор путей."""
     count = 0
-    for filename in os.listdir(directory_path):
+    for filename in random.shuffle(os.listdir(directory_path)):
         if filename.endswith(".json"):
             filepath = os.path.join(directory_path, filename)
             with open(filepath, 'r', encoding='utf8') as file:
@@ -127,9 +127,9 @@ async def run_app():
     async with trio.open_nursery() as nursery:
         channels = []
 
-        for index in range(args.websockets_number):
+        for _ in range(args.websockets_number):
             channels.append(
-                trio.open_memory_channel(index),
+                trio.open_memory_channel(0),
             )
 
         for route in load_routes(args.routes):
